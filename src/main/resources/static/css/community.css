@@ -4,7 +4,7 @@ body{
 
 .main{
     background-color: white;
-    margin: 30px;
+    margin: 50px;
 }
 
 .btn-publish{
@@ -21,4 +21,8 @@ body{
     font-size: 12px;
     font-weight: normal;
     color: #999;
+}
+
+.section{
+    margin-top: 15px;
 }

@@ -30,3 +30,12 @@ create table USER
 ```bash
 mvn flyway:migrate
 ```
+
+## 笔记
+1.textarea 用 th:text回显，而input 用th:value回显
+2.fastjson 能将下划线自动转成驼峰
+
+## 疑问
+1.PageDTO中 pages 为什么要new出来 其它变量无需new
+2.select中为啥用count(1)不用coun(*
+3.在加入拦截器后，如果有@EnableWebMvc注解就会找不到资源，去掉就好了

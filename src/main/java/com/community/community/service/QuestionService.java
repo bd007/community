@@ -1,5 +1,6 @@
 package com.community.community.service;
 
+import com.community.community.dto.PageDTO;
 import com.community.community.dto.QuestionDTO;
 import com.community.community.mapper.QuestionMapper;
 import com.community.community.mapper.UserMapper;
@@ -21,10 +22,13 @@ public class QuestionService {
     @Autowired
     UserMapper userMapper;
 
-    public List<QuestionDTO> list() {
-
+    public PageDTO list(Integer page, Integer size) {
+        PageDTO pageDTO = new PageDTO();
+        Integer totalCount = questionMapper.count();
+        pageDTO.setPageInfo(totalCount,page,size);
+        Integer offset = size*(pageDTO.getPage()-1);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        List<Question> questionList = questionMapper.list();
+        List<Question> questionList = questionMapper.list(offset,size);
         for(Question question : questionList){
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -32,6 +36,25 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        pageDTO.setQuestions(questionDTOList);
+        return pageDTO;
+    }
+
+    public PageDTO list(Integer id, Integer page, Integer size) {
+        PageDTO pageDTO = new PageDTO();
+        Integer totalCount = questionMapper.countByCreator(id);
+        pageDTO.setPageInfo(totalCount,page,size);
+        Integer offset = size*(pageDTO.getPage()-1);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        List<Question> questionList = questionMapper.listByCreator(id,offset,size);
+        for(Question question : questionList){
+            User user = userMapper.findById(question.getCreator());
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        pageDTO.setQuestions(questionDTOList);
+        return pageDTO;
     }
 }
