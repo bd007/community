@@ -7,6 +7,7 @@
 [okhttp](https://square.github.io/okhttp/)
 [mybatis](https://mybatis.org/spring-boot-starter/mybatis-spring-boot-test-autoconfigure/index.html)
 [thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+[spring文档](https://docs.spring.io/spring/docs/5.0.1.RELEASE/spring-framework-reference/)
 
 ## 工具
 [画图](https://www.visual-paradigm.com/cn/)
@@ -37,5 +38,6 @@ mvn flyway:migrate
 
 ## 疑问
 1.PageDTO中 pages 为什么要new出来 其它变量无需new
-2.select中为啥用count(1)不用coun(*
+2.select中为啥用count(1)不用count(*)
 3.在加入拦截器后，如果有@EnableWebMvc注解就会找不到资源，去掉就好了
+4.拦截器中自定义的HandlerInterceptor入参，为什么不能new出来，必须要@Autowired自动注入
