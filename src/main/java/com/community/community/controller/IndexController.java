@@ -26,7 +26,7 @@ public class IndexController {
                         @RequestParam(name="size",defaultValue = "5") Integer size){
 
         PageDTO pages = questionService.list(page,size);
-
+        request.getSession().getAttribute("user");
         model.addAttribute("pages",pages);
         return "index";
     }
