@@ -39,7 +39,8 @@ mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 3.mybatis用mybatis generator自动生成sql  
 4.okhttp发送http请求  
 5.spring-boot-devtools自动部署，liveReload发现后台服务变了就刷新页面  
-6.统一处理异常
+6.统一处理异常  
+7.新增阅读数功能，新增QuestionExtMapper.xml，实现自定义的sql
 
 ## 疑问
 1.PageDTO中 pages 为什么要new出来 其它变量无需new  

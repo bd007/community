@@ -1,7 +1,8 @@
 package com.community.community.advice;
 
+import com.community.community.dto.ResultDTO;
+import com.community.community.exception.CustomizeErrorCode;
 import com.community.community.exception.CustomizeException;
-import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,22 +14,22 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomizeExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    ModelAndView handleControllerException(HttpServletRequest request, Throwable ex, Model model) {
-        HttpStatus status = getStatus(request);
-        if (ex instanceof CustomizeException) {
-            model.addAttribute("message", ex.getMessage());
+    Object handleControllerException(HttpServletRequest request, Throwable ex, Model model) {
+        String ContentType = request.getContentType();
+        if ("application/json".equals(ContentType)) {
+            if (ex instanceof CustomizeException) {
+                return ResultDTO.errorOf((CustomizeException) ex);
+            } else {
+                return ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
+            }
         } else {
-            model.addAttribute("message", "服务冒烟了，稍后再试试。。。。。");
+            if (ex instanceof CustomizeException) {
+                model.addAttribute("message", ex.getMessage());
+            } else {
+                model.addAttribute("message", CustomizeErrorCode.SYS_ERROR);
+            }
+            return new ModelAndView("error");
         }
-        return new ModelAndView("error");
     }
 
-    private HttpStatus getStatus(HttpServletRequest request) {
-        Integer statusCode = (Integer)
-                request.getAttribute("javax.servlet.error.status_code");
-        if (statusCode == null) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.valueOf(statusCode);
-    }
 }
