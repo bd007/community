@@ -38,6 +38,6 @@ public class CommentController {
         comment.setCommentator(user.getId());
         comment.setLikeCount(Long.valueOf(0));
         commentService.insert(comment);
-        return null;
+        return ResultDTO.okOf();
     }
 }

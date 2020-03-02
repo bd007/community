@@ -7,4 +7,5 @@ import org.springframework.stereotype.Component;
 public interface QuestionExtMapper {
     int addViewCount(Question record);
 
+    int addCommCount(Question record);
 }
