@@ -1,6 +1,6 @@
 package com.community.community.controller;
 
-import com.community.community.dto.CommentDTO;
+import com.community.community.dto.CommentCreateDTO;
 import com.community.community.dto.ResultDTO;
 import com.community.community.exception.CustomizeErrorCode;
 import com.community.community.model.Comment;
@@ -23,16 +23,16 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
         Comment comment = new Comment();
-        comment.setQuestionId(commentDTO.getQuestionId());
-        comment.setContent(commentDTO.getContent());
-        comment.setType(commentDTO.getType());
+        comment.setQuestionId(commentCreateDTO.getQuestionId());
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setType(commentCreateDTO.getType());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setCommentator(user.getId());
