@@ -34,7 +34,7 @@
             </div>
             <hr class="coi-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="coi-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="media">
+                <div class="media" th:each="commentDTO : ${commentDTOS}">
                     <div class="media-left">
                         <a href="#">
                             <img class="media-object img-circle" th:src="${questionDTO.user.avatarUrl}">
@@ -42,14 +42,14 @@
                     </div>
                     <div class="media-body comment-name">
                         <h5 class="media-heading">
-                            <a th:text="${questionDTO.user.name}"></a>
+                            <a th:text="${commentDTO.user.name}"></a>
                         </h5>
-                        <div>我是回复内容</div>
+                        <div th:text="${commentDTO.content}"></div>
                         <div class="menu">
                             <span class="glyphicon glyphicon-thumbs-up icon"></span>
                             <span class="glyphicon glyphicon-comment icon"></span>
                             <span class="pull-right"
-                                  th:text="${#dates.format(questionDTO.gmtCreate,'yyyy-MM-dd')}"></span>
+                                  th:text="${#dates.format(commentDTO.gmtCreate,'yyyy-MM-dd')}"></span>
                         </div>
                     </div>
                 </div>
