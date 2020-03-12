@@ -1,13 +1,11 @@
 package com.community.community.service;
 
 import com.community.community.dto.CommentDTO;
+import com.community.community.dto.QuestionDTO;
 import com.community.community.enums.CommentTypeEnum;
 import com.community.community.exception.CustomizeErrorCode;
 import com.community.community.exception.CustomizeException;
-import com.community.community.mapper.CommentMapper;
-import com.community.community.mapper.QuestionExtMapper;
-import com.community.community.mapper.QuestionMapper;
-import com.community.community.mapper.UserMapper;
+import com.community.community.mapper.*;
 import com.community.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -32,6 +32,9 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
     @Transactional
     public void insert(Comment comment) {
         if (comment.getQuestionId() == null || comment.getQuestionId() == 0) {
@@ -47,6 +50,10 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getQuestionId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.addCommCount(parentComment);
         } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getQuestionId());
@@ -59,13 +66,14 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> addComment(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum commentTypeEnum) {
         List<CommentDTO> commentDTOS = new ArrayList<>();
         //根据questionId和type去comment表中查
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andQuestionIdEqualTo(id)
-                .andTypeEqualTo(1);
+                .andTypeEqualTo(commentTypeEnum.getType());
+        commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
         //根据commentator去user表中查
         for (Comment comment : comments) {
@@ -79,5 +87,20 @@ public class CommentService {
             commentDTOS.add(commentDTO);
         }
         return commentDTOS;
+    }
+
+    public List<QuestionDTO> selectRelated(QuestionDTO questionDTO) {
+        Question question = new Question();
+        question.setId(questionDTO.getId());
+        //String regTag = questionDTO.getTag().replace(",", "|");
+        String regTag = Arrays.stream(questionDTO.getTag().split(",")).collect(Collectors.joining("|"));
+        question.setTag(regTag);
+        List<Question> questionList = questionExtMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOS = questionList.stream().map(q -> {
+            QuestionDTO questionDTO1 = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO1);
+            return questionDTO1;
+        }).collect(Collectors.toList());
+        return questionDTOS;
     }
 }
