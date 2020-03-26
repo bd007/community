@@ -10,6 +10,12 @@
     <script src="/js/bootstrap.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/moment.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/editormd.min.css">
+    <link rel="stylesheet" href="/css/editormd.preview.min.css">
+    <script src="/js/editormd.min.js" type="application/javascript"></script>
+    <script src="/js/moment.js" type="application/javascript"></script>
+    <script src="/js/lib/marked.min.js"></script>
+    <script src="/js/lib/prettify.min.js"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -25,7 +31,15 @@
                 次浏览：<span th:text="${questionDTO.viewCount}"/>
                 <hr>
                 <!--内容-->
-                <div class="coi-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionDTO.description}"/>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display:none;" th:text="${questionDTO.description}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
+
                 <hr class="coi-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!--标签-->
                 <div class="coi-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -134,7 +148,7 @@
                 <h4>相关问题</h4>
                 <div class="coi-lg-12 col-md-12 col-sm-12 col-xs-12 question-related"
                      th:each="question : ${questionRelated}">
-                    <a th:href="@{'/question/'+${question.id}}" th:text="${question.description}"></a>
+                    <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                 </div>
             </div>
         </div>

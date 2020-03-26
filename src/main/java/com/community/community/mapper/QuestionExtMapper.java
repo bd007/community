@@ -1,5 +1,6 @@
 package com.community.community.mapper;
 
+import com.community.community.dto.QuestionQueryDTO;
 import com.community.community.model.Question;
 import org.springframework.stereotype.Component;
 
@@ -12,4 +13,8 @@ public interface QuestionExtMapper {
     int addCommCount(Question record);
 
     List<Question> selectRelated(Question record);
+
+    int countBySearch(QuestionQueryDTO record);
+
+    List<Question> selectBySearch(QuestionQueryDTO record);
 }
